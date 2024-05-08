@@ -1,0 +1,18 @@
+div.selected {
+  font-weight: bolder;
+}
+.title {
+  color: #333333;
+  .name {
+    font-size: large;
+    color: blue;
+  }
+  .author {
+    font-size: medium;
+    padding-left: 20px;
+    color: black;
+  }
+}
+.tab {
+  width: 100%;
+}

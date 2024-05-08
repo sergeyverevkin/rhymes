@@ -1,0 +1,23 @@
+
+.lyricBlockLine {
+  width: 50%;
+
+  .lyricBlockLineNumber {
+    font-size: xx-small;
+  }
+  .lyricBlockLineWords {
+    color: black;
+  }
+
+  .word, .hidden {
+    font-weight: bolder;
+    font-family: monospace;
+    font-size: larger;
+  }
+
+  .hidden {
+    background-color: black;
+  }
+}
+
+
