@@ -1,8 +1,5 @@
-export type RhymeToken = {
-  content: string,
-  positionX: number,
-  visible: boolean,
-};
+import { RhymeToken } from './rhymeToken';
+
 export class RhymeLine {
   positionY: number = 0;
   tokens: RhymeToken[] = [];
@@ -12,8 +9,12 @@ export class RhymeLine {
       return {...token, visible: state};
     });
   }
-};
 
-export type RhymeItem = {
-  lines: RhymeLine[];
+  setExcept(exceptX: number) {
+    this.tokens = this.tokens.map( (token) => {
+      return {...token, visible: exceptX === token.positionX ? true : token.visible};
+    })
+  }
+
 }
+

@@ -9,6 +9,15 @@
   flex-direction: row;
   height: 52px;
 
+  select {
+    width: 50px;
+  }
+  .percent {
+    padding-top: 20px;
+    font-size: 0.8em;
+    width: 50px;
+  }
+
   .block {
     background-color: #ccc;
     border: chocolate;

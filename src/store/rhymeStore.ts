@@ -1,35 +1,71 @@
-import { action, computed, makeAutoObservable, observable } from "mobx"
-import uuid from "node-uuid"
-import { RhymeItem, RhymeLine, RhymeToken } from '../model/rhymeLine';
-import { calculateNewValue } from '@testing-library/user-event/dist/utils';
+import { action, makeAutoObservable, observable } from "mobx"
 import rrr from "../mock/rhymes.json";
+import { Rhyme } from '../model/rhyme';
 
 export class RhymeStore {
   rhymes: Rhyme[] = [];
   isLoading = true;
   selectedRhyme?: Rhyme;
-  mode: number = 100;
+  showPercent: number = 100;
+  toggledWordX: number = 0;
+  toggledWordY: number = 0;
 
   constructor() {
     makeAutoObservable(this, {
       isLoading: observable,
       selectedRhyme: observable,
       rhymes: observable,
-      mode: observable,
+      showPercent: observable,
+      setToggledWord: action,
       setSelectedRhyme: action,
+      addMode: action,
       loadRhymes: action,
-      setMode: action,
-      appliedRhyme: computed,
     });
     this.loadRhymes()
   }
 
-  get appliedRhyme(): Rhyme | undefined {
-    return this.selectedRhyme?.applyMode(this.mode) ?? this.selectedRhyme;
+//  get appliedRhyme(): Rhyme | undefined {
+//    return this.selectedRhyme;
+    /*
+    if (this.isRecalc) {
+      this.disableRecalc();
+      return this.selectedRhyme?.applyMode(
+        this.showPercent,
+        this.toggledWordX,
+        this.toggledWordY) ?? this.selectedRhyme;
+    }
+    return this.selectedRhyme;
+    */
+//}
+
+  setToggledWord(x: number, y: number): void {
+    if (this.toggledWordX === x && this.toggledWordY === y) {
+      this.toggledWordX = -1;
+      this.toggledWordY = -1;
+      return;
+    }
+    this.toggledWordX = x;
+    this.toggledWordY = y;
+    this.selectedRhyme?.applyModeSelf(this.showPercent, this.toggledWordX, this.toggledWordY);
   }
 
-  setSelectedRhyme(selectedRhyme?: Rhyme) {
-    this.selectedRhyme = selectedRhyme;
+  setSelectedRhyme(guid: string) {
+    if (this.selectedRhyme && this.selectedRhyme.id === guid) {
+      return;
+    }
+    const selectedRhyme = this.rhymes.find(r => r.id === guid);
+    if (selectedRhyme) {
+      this.selectedRhyme = new Rhyme(selectedRhyme);
+      this.selectedRhyme.applyModeSelf(this.showPercent, this.toggledWordX, this.toggledWordY);
+    }
+  }
+
+  addMode(modeDelta: number) {
+    if (!this.selectedRhyme) return;
+    if (this.showPercent >= 100 && modeDelta > 0) return;
+    if (this.showPercent <= 0 && modeDelta < 0) return;
+    this.showPercent += modeDelta;
+    this.selectedRhyme.applyModeSelf(this.showPercent,  this.toggledWordX, this.toggledWordY);
   }
 
   // Fetches all Rhymes
@@ -74,82 +110,8 @@ export class RhymeStore {
   removeRhyme(rhyme: Rhyme) {
     this.rhymes.splice(this.rhymes.indexOf(rhyme), 1)
   }
-
-  addMode(modeDelta: number) {
-    if (!this.selectedRhyme) return;
-    if (this.mode >= 100 && modeDelta > 0) return;
-    if (this.mode <= 0 && modeDelta < 0) return;
-    this.mode += modeDelta;
-  }
-
-  setMode(mode: number) {
-    if (!this.selectedRhyme) return;
-    this.mode = mode;
-  }
 }
 
 
-
-// Domain object Rhyme.
-export class Rhyme {
-  id: string; // Unique id of this Rhyme, immutable.
-  author: string = "";
-  title: string = "";
-  content: RhymeItem;
-
-  constructor(id = uuid.v4()) {
-    makeAutoObservable(this, {
-      id: false,
-    })
-    this.id = id;
-    this.content = {lines: []};
-  }
-
-  parse(content: string): void {
-    const lines = content.split("\n");
-    let ii = 0;
-    lines.forEach((v) => {
-      let iX = 0;
-      let rL: RhymeLine = new RhymeLine();
-      rL.positionY = ++ii;
-      rL.tokens = v.split(" ").map((s) => {
-          const token: RhymeToken = {
-            content: s,
-            positionX: iX,
-            visible: true,
-          };
-          iX += s.length; // TODO: для моноширинного шрифта только
-          return token;
-        });
-      this.content.lines.push(rL);
-    });
-  }
-
-  get asJson(): Rhyme {
-    let rr = new Rhyme();
-    rr.author = this.author;
-    rr.title = this.title;
-    rr.content = this.content;
-    return rr;
-  }
-
-  applyMode(mode: number): Rhyme {
-    const res = new Rhyme();
-    res.id = this.id;
-    res.content = this.content;
-    res.author = this.author;
-    res.title = this.title;
-    res.content = {
-        ...this.content,
-        lines: this.content.lines.map(line => {
-          const line2 = new RhymeLine();
-          line2.tokens = line.tokens;
-          line2.setMode(mode)
-          return line2;
-        }),
-    };
-    return res;
-  }
-}
 
 export const rhymeStore = new RhymeStore();

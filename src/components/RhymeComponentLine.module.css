@@ -1,4 +1,13 @@
 
+
+.firstLine {
+  padding-top: 32px;
+}
+
+.otherLine {
+  padding-top: 8px;
+}
+
 .lyricBlockLine {
   width: 50%;
 
@@ -17,6 +26,10 @@
 
   .hidden {
     background-color: black;
+  }
+
+  .hint {
+    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg viewBox='28.194 78.255 446.796 536.367' width='446.796' height='536.367' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='28.194' y='78.255' width='446.796' height='536.367' style='stroke: rgb(0, 0, 0); fill: rgb(216, 216, 216);'/%3E%3C/svg%3E");
   }
 }
 

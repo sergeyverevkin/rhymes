@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { Rhyme } from '../store/rhymeStore';
 import styles from './RhymeTab.module.css';
+import { Rhyme } from '../model/rhyme';
 
-type RhymeTabProps = {
+type RhymeListTabProps = {
   rhyme: Rhyme,
   fnClick: (rhyme: Rhyme) => void,
   isSelected: boolean
 };
 
-export class RhymeTab extends Component<RhymeTabProps> {
+export class RhymeListTab extends Component<RhymeListTabProps> {
 
   render() {
     return <div onClick={() => {
