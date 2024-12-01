@@ -9,7 +9,7 @@ const App = observer(
   () => {
     const selected: string = rhymeStore.selectedRhyme ? rhymeStore.selectedRhyme.id : "";
     const mainBlock = rhymeStore.isLoading
-      ? "<div>Loading...</div>"
+      ? <div>Loading...</div>
       : (rhymeStore.selectedRhyme
         ? <RhymeComponent rhyme={rhymeStore.selectedRhyme} xx={rhymeStore.toggledWordX} yy={rhymeStore.toggledWordY}/>
         : <RhymeList rhymes={rhymeStore.rhymes} selected={selected}/>);
@@ -19,10 +19,18 @@ const App = observer(
         <main className="App-main">
           {mainBlock}
         </main>
+      </div>);
+/*    return (
+      <div className="App">
+        <header className="App-header" onClick={() => rhymeStore.setSelectedRhyme("")}>Стихи</header>
+        <main className="App-main">
+          {mainBlock}
+        </main>
         <footer>
           Стихотворений в базе: {rhymeStore.rhymes.length} шт
         </footer>
       </div>);
+      */
   }
 );
 /*
