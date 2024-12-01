@@ -2,6 +2,7 @@
   "name": "rhymes",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://sergeyverevkin.github.io/rhymes",
   "dependencies": {
     "@babel/core": "^7.24.5",
     "@babel/preset-env": "^7.24.5",
